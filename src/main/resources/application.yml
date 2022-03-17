@@ -4,9 +4,11 @@ server:
     include-binding-errors: always
 
 spring:
+
   datasource:
     url: jdbc:mysql://localhost:3306/signindb
     username: root
+
   jpa:
     hibernate:
       ddl-auto: create
@@ -15,3 +17,9 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         formate_sql: true
     show-sql: true
+SpringEcommerce:
+  app:
+    jwtCookieName: SpringEcommerce
+    jwtSecret: SpringEcommerceSecretKey
+    jwtExpirationMs: 86400000
+
