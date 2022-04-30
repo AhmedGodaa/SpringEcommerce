@@ -1,17 +1,16 @@
 package net.godaa.SpringEcommerce.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
+import net.godaa.SpringEcommerce.Customer.Customer;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Table(name = "users",
@@ -22,36 +21,41 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User implements Serializable {
+public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @GeneratedValue(strategy = AUTO)
     private Long id;
-
-    @NotBlank
-    @Size(max = 20)
     private String username;
-
-    @NotBlank
-    @Size(max = 50)
-    @Email
     private String email;
-
-    @NotBlank
-    @Size(max = 120)
     private String password;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    private boolean enabled;
 
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
+    @OneToOne(mappedBy = "user")
+    private Customer customer;
+
+    @Transient
+    private MultipartFile productImage;
+
+@ManyToMany(fetch = FetchType.EAGER)
+@JoinTable(name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
+private Collection<Role> roles = new ArrayList<>();
+
+
+
+
+
+//    public void addRole(Role role) {
+////       We need to add role to user && user to roles
+//
+////  1-     We added  Set<Tutorial> tutorials in class Tag the tutorial
+//        roles.add(role);
+////  2-     We added  Set<Tutorial> tutorials in class Tag the tutorial
+//        tag.getTutorials().add(this);
+//    }
+
 
 
 }

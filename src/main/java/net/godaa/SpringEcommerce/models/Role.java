@@ -1,33 +1,34 @@
 package net.godaa.SpringEcommerce.models;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "roles",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "id"),
+        })
+@Getter
+@Setter
+
+
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private ERole name;
+    private Long id;
+    private String name;
+
     public Role() {
     }
-    public Role(ERole name) {
-        this.name = name;
-    }
-    public Integer getId() {
-        return id;
-    }
-    public void setId(Integer id) {
+
+    public Role(Long id, String name) {
         this.id = id;
-    }
-    public ERole getName() {
-        return name;
-    }
-    public void setName(ERole name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }
