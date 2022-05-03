@@ -59,10 +59,9 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader(HEADER_STRING, TOKEN_PREFIX + access_token);
         response.setContentType(APPLICATION_JSON_VALUE);
 
+
         SignInResponse signInResponse = new SignInResponse(
                 user.getUsername(),
-                user.isAccountNonExpired(),
-                user.isAccountNonLocked(),
                 user.isCredentialsNonExpired(),
                 access_token,
                 user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));

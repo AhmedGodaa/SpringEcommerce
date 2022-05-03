@@ -11,10 +11,6 @@ public class SignInResponse {
 
     private String username;
 
-    private boolean accountNonExpired;
-
-    private boolean accountNonLocked;
-
     private boolean enabled;
 
     private String token;

@@ -1,14 +1,14 @@
-package net.godaa.SpringEcommerce.controllers;
+package net.godaa.SpringEcommerce.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.godaa.SpringEcommerce.models.ERole;
 
 @Data
 @NoArgsConstructor
+public
 class RoleForm {
     private String username;
-    private ERole role;
+    private String role;
 
 
 }

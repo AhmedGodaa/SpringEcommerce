@@ -1,4 +1,4 @@
-package net.godaa.SpringEcommerce.product;
+package net.godaa.SpringEcommerce.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,6 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "product")
@@ -23,25 +21,24 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "category")
-    private String productCategory;
-
     @Column(name = "description")
-    private String productDescription;
+    private String description;
 
     @Column(name = "manufacturer")
-    private String productManufacturer;
+    private String manufacturer;
 
-    @NotEmpty(message = "Product Name is mandatory")
     @Column(name = "name")
-    private String productName;
+    private String name;
 
-    @NotNull(message = "Please provide some price")
     @Column(name = "price")
-    private double productPrice;
+    private double price;
 
     @Column(name = "unit")
     private String unitStock;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Transient
     private MultipartFile productImage;

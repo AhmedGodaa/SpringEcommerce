@@ -1,10 +1,11 @@
-package net.godaa.SpringEcommerce.models;
+package net.godaa.SpringEcommerce.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-
 @Entity
 @Table(name = "roles",
         uniqueConstraints = {
@@ -12,23 +13,15 @@ import javax.persistence.*;
         })
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 
 
-public class Role {
+public class Role  {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    public Role() {
-    }
-
-    public Role(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
 }
