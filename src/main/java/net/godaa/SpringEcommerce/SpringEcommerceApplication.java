@@ -1,41 +1,46 @@
 package net.godaa.SpringEcommerce;
 
-import net.godaa.SpringEcommerce.domain.Cart;
-import net.godaa.SpringEcommerce.domain.Role;
-import net.godaa.SpringEcommerce.repository.CartRepo;
-import net.godaa.SpringEcommerce.repository.ProductRepo;
-import net.godaa.SpringEcommerce.security.jwt.SecurityConstants;
-import net.godaa.SpringEcommerce.domain.User;
-import net.godaa.SpringEcommerce.service.impl.UserServiceImpl;
+import net.godaa.SpringEcommerce.service.FileService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
+@SpringBootApplication
+@EnableSwagger2
+public class SpringEcommerceApplication implements CommandLineRunner {
+    @Resource
+    FileService fileService;
 
-@SpringBootApplication()
-public class SpringEcommerceApplication {
-    ProductRepo productRepo;
-    CartRepo cartRepo;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringEcommerceApplication.class, args);
     }
 
-    @Bean
-    CommandLineRunner run(UserServiceImpl userService) {
-        return args -> {
-
-            userService.saveRole(new Role(null, "ROLE_USER"));
-            userService.saveRole(new Role(null, "ROLE_ADMIN"));
-            userService.saveUser(new User(null, "ahmed", "ahmed@gmail.com", "password", new ArrayList<>(), new Cart()));
-            Cart cart = new Cart();
-            userService.addRoleToUser("ahmed", SecurityConstants.ROLE_ADMIN);
-            cartRepo.save(new Cart());
-        };
+    @Override
+    public void run(String... args) throws Exception {
+        fileService.deleteAll();
+        fileService.init();
 
     }
+
+
+
+//    @Bean
+//    CommandLineRunner run(UserService userService) {
+//        return args -> {
+////
+//            userService.saveRole(new Role(null, ROLE_USER));
+//            userService.saveRole(new Role(null, ROLE_ADMIN));
+//
+//            userService.saveUser(new User(null, "ahmed", "ahmed@gmail.com", "password", new ArrayList<>()));
+//            userService.saveUser(new User(null, "ali", "ali@gmail.com", "password", new ArrayList<>()));
+//
+//            userService.addRoleToUser("ahmed", ROLE_ADMIN);
+//        };
+//
+//    }
 
 
 }

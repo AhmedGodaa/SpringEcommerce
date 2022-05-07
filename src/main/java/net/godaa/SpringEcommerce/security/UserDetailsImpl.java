@@ -28,7 +28,8 @@ public class UserDetailsImpl implements UserDetailsService {
         User user = userRepo.findByUsername(username);
         if (user == null) {throw new UsernameNotFoundException(username);}
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(String.valueOf(role.getName()))));
+        authorities.add(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
+//        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(String.valueOf(role.getName()))));
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
     }
 

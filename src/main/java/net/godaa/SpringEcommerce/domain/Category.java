@@ -19,6 +19,10 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String description;
+    @Column(name = "image_url")
+    private String imageURL;
+
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;

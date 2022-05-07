@@ -1,9 +1,10 @@
 package net.godaa.SpringEcommerce.repository;
 
-import net.godaa.SpringEcommerce.domain.Cart;
+import net.godaa.SpringEcommerce.domain.CartItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CartRepo extends JpaRepository<Cart, Long> {
+public interface CartItemRepo extends JpaRepository<CartItem, Long> {
+
 }

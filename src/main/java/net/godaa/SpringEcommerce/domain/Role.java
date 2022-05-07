@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+
 @Entity
 @Table(name = "roles",
         uniqueConstraints = {
@@ -17,7 +18,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 
 
-public class Role  {
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -11,12 +11,24 @@ spring:
     password: root
 
   jpa:
+    general-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-        formate_sql: true
-    show-sql: true
+        format_sql: true
+  #    show-sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 500KB
+      max-request-size: 500KB
+
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 

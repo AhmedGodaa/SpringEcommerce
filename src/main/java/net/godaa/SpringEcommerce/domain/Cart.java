@@ -19,6 +19,9 @@ public class Cart {
     private Long id;
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<CartItem> cartItem;
     private double totalPrice;
 
 
@@ -28,9 +31,7 @@ public class Cart {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products;
 
-    public Cart(User user, double totalPrice, List<Product> products) {
+    public Cart(User user) {
         this.user = user;
-        this.totalPrice = totalPrice;
-        this.products = products;
     }
 }

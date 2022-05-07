@@ -1,17 +1,13 @@
 package net.godaa.SpringEcommerce.domain;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
+
 @Entity
 @Table(name = "product")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
@@ -21,25 +17,24 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "description")
     private String description;
 
-    @Column(name = "manufacturer")
-    private String manufacturer;
+    private String productName;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "price")
-    private double price;
+    private double productPrice;
 
     @Column(name = "unit")
     private String unitStock;
+
+    @Transient
+    private MultipartFile productImage;
+
+
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Transient
-    private MultipartFile productImage;
+
 }

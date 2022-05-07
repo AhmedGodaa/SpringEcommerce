@@ -1,5 +1,6 @@
 package net.godaa.SpringEcommerce.utils;
 
+import net.godaa.SpringEcommerce.domain.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,5 +25,10 @@ public class FileUploadUtil {
         } catch (IOException ioe) {
             throw new IOException("Could not save image file: " + fileName, ioe);
         }
+    }
+
+
+    public static void saveUserImage(User user, MultipartFile multipartFile) throws IOException {
+
     }
 }

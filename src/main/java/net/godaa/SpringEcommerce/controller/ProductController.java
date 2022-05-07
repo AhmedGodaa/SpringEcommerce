@@ -2,9 +2,12 @@ package net.godaa.SpringEcommerce.controller;
 
 import net.godaa.SpringEcommerce.domain.Product;
 import net.godaa.SpringEcommerce.repository.ProductRepo;
+import net.godaa.SpringEcommerce.security.jwt.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,14 +25,19 @@ public class ProductController {
         return ResponseEntity.ok().body(productRepo.findAll());
     }
 
-    @PostMapping("/product/save")
-    public ResponseEntity<List<Product>> saveProduct(@RequestBody Product product) {
-        return new ResponseEntity(productRepo.save(product), HttpStatus.CREATED);
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<Product> getProductById(@PathVariable("productId") Long productId) {
+        if (productRepo.existsById(productId)) {
+            return ResponseEntity.ok().body(productRepo.findById(productId).get());
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
-
     @DeleteMapping("/product/{productId}")
-    public ResponseEntity<HttpStatus> deleteProductById(@PathVariable Long productId) {
+    public ResponseEntity<HttpStatus> deleteProductById(@PathVariable(value = "productId") Long productId) {
         if (productRepo.existsById(productId)) {
             productRepo.deleteById(productId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -40,15 +48,37 @@ public class ProductController {
 
     }
 
+    @PostMapping("/product/save")
+//    @PreAuthorize(SecurityConstants.ROLE_ADMIN)
+    public ResponseEntity<List<Product>> saveProduct(@RequestBody Product product) {
+        return new ResponseEntity(productRepo.save(product), HttpStatus.CREATED);
+    }
 
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long productId) {
-        if (productRepo.existsById(productId)) {
-            return ResponseEntity.ok().body(productRepo.findById(productId).get());
+    @PutMapping("/product/edit/{productId}")
+//    @PreAuthorize(SecurityConstants.ROLE_ADMIN)
+    public void updateProduct(@PathVariable("productId") Long productId, @RequestBody Product productRequest) {
+        Product product = productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException("productId : " + productId + "not found"));
+        product.setProductName(productRequest.getProductName());
+        product.setProductPrice(productRequest.getProductPrice());
+        product.setDescription(productRequest.getDescription());
+        product.setUnitStock(product.getUnitStock());
+        productRepo.save(product);
 
-        } else {
-            return ResponseEntity.notFound().build();
-        }
 
     }
+
+
+//    @PostMapping("/tutorials/{tutorialId}/comments")
+//    public ResponseEntity<HttpStatus> createComment(
+//            @RequestBody Comment commentBody,
+//            @PathVariable(value = "tutorialId") Long tutorialId) {
+//        tutorialRepo.findById(tutorialId).map(
+//                tutorial -> {
+//                    commentBody.setTutorial(tutorial);
+//                    return commentRepo.save(commentBody);
+//                }).orElseThrow(() ->
+//                new ResourceNotFoundException("NOT FOUND TUTORIAL WITH ID" + tutorialId));
+//        return new ResponseEntity<>(HttpStatus.OK);
+//
+//    }
 }

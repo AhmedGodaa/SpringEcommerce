@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import static javax.persistence.GenerationType.AUTO;
 
@@ -21,9 +19,7 @@ import static javax.persistence.GenerationType.AUTO;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User  {
-    // Elements that need to be added to constructor and have Relationship
-
+public class User {
 
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -38,21 +34,33 @@ public class User  {
     private boolean enabled;
     private String image;
 
-    @OneToOne(cascade = {CascadeType.ALL},mappedBy = "user")
+    @OneToOne(cascade = {CascadeType.ALL}, mappedBy = "user")
     @JoinColumn(name = "userId")
     private Cart cart;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles = new ArrayList<>();
+    private String role;
 
-    public User(Long id, String username, String email, String password, Collection<Role> roles,Cart cart) {
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.roles = roles;
-        this.cart = cart;
+
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", enabled=" + enabled +
+                ", image='" + image + '\'' +
+                ", cart=" + cart +
+                ", role='" + role + '\'' +
+                '}';
     }
 }
