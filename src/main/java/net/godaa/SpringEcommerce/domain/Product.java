@@ -1,8 +1,10 @@
 package net.godaa.SpringEcommerce.domain;
+
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -14,14 +16,17 @@ public class Product {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "description")
     private String description;
 
-    private String productName;
-
-    private double productPrice;
+    @NotNull
+    @Column(name = "name", nullable = false)
+    private String name;
+    @NotNull
+    private double price;
 
     @Column(name = "unit")
     private String unitStock;
@@ -29,10 +34,8 @@ public class Product {
     @Transient
     private MultipartFile productImage;
 
-
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
+    @NonNull
     @JoinColumn(name = "category_id")
     private Category category;
 

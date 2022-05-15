@@ -1,9 +1,9 @@
 package net.godaa.SpringEcommerce.controller;
 
 import net.godaa.SpringEcommerce.domain.File;
-import net.godaa.SpringEcommerce.domain.FileInfo;
-import net.godaa.SpringEcommerce.domain.ResponseFile;
-import net.godaa.SpringEcommerce.domain.ResponseMessage;
+import net.godaa.SpringEcommerce.domain.payload.FileInfo;
+import net.godaa.SpringEcommerce.domain.payload.ResponseFile;
+import net.godaa.SpringEcommerce.domain.payload.ResponseMessage;
 import net.godaa.SpringEcommerce.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;

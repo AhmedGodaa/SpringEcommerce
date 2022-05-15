@@ -1,9 +1,16 @@
 package net.godaa.SpringEcommerce.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "cart")
@@ -15,14 +22,15 @@ public class Cart {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(cascade = CascadeType.ALL)
-    private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CartItem> cartItem;
-    private double totalPrice;
+    @NotNull
+    @DecimalMin(value = "0")
+    @Column(name = "total_price", precision = 21, scale = 2, nullable = false)
+    private BigDecimal totalPrice;
 
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -31,7 +39,50 @@ public class Cart {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products;
 
-    public Cart(User user) {
-        this.user = user;
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "user", "carts" }, allowSetters = true)
+    private Customer customer;
+
+    @OneToMany(mappedBy = "cart")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = {"cart"}, allowSetters = true)
+    private Set<Order> orders = new HashSet<>();
+
+
+    public void calculatePrice() {
+        if (null != this.orders) {
+            this.setTotalPrice(this.orders.stream().map(Order::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
+        }
     }
+
+
+    public Cart addOrder(Order order) {
+        this.orders.add(order);
+        order.setCart(this);
+        calculatePrice();
+        return this;
+    }
+
+
+    public Cart removeOrder(Order productOrder) {
+        this.orders.remove(productOrder);
+        productOrder.setCart(null);
+        calculatePrice();
+        return this;
+    }
+
+
+    public void setOrders(Set<Order> productOrders) {
+        if (this.orders != null) {
+            this.orders.forEach(i -> i.setCart(null));
+        }
+        if (productOrders != null) {
+            productOrders.forEach(i -> i.setCart(this));
+        }
+        this.orders = productOrders;
+        calculatePrice();
+    }
+
+
 }
