@@ -1,4 +1,4 @@
-package net.godaa.SpringEcommerce.domain;
+package net.godaa.SpringEcommerce.domain.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

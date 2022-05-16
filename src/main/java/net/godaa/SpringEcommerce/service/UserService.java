@@ -17,6 +17,7 @@ import net.godaa.SpringEcommerce.utils.RandomUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,10 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,7 +55,7 @@ public class UserService {
 //    Register User
 
 
-    public User createUser(User userRequest) {
+    public User createUser(UserDTO userRequest) {
         User user = new User();
         user.setUsername(userRequest.getUsername().toLowerCase());
         user.setFirstName(userRequest.getFirstName());
@@ -70,22 +68,26 @@ public class UserService {
         }
         if (userRequest.getAuthorities() != null) {
             Set<Authority> authorities = new HashSet<>();
-            for (Authority authority : userRequest
-                    .getAuthorities()) {
-                Optional<Authority> byId = authorityRepo.findById(authority.getName());
-                if (byId.isPresent()) {
-                    Authority authority1 = byId.get();
-                    authorities.add(authority1);
-                }
-            }
+//                    Getting Authorities from userRequest
+            userRequest.
+                    getAuthorities()
+//                    Stream Authorities
+                    .stream()
+//                    Check if Authority exist by its id
+                    .map(authorityRepo::findById)
+//                    Check if is present cause it optional
+                    .filter(Optional::isPresent)
+//                    Add .get() to existed Authority
+                    .map(Optional::get)
+//                    Add Authority to authorities
+                    .forEach(authorities::add);
             user.setAuthorities(authorities);
-
 
         }
         userRepo.save(user);
-        log.debug("User Created {}", user);
+        log.debug("User Created {}",user);
         return user;
-    }
+}
 
     public Optional<UserDTO> updateUser(UserDTO userRequest) {
 
@@ -121,7 +123,7 @@ public class UserService {
                     return user;
 
                 })
-                .map(_user -> new UserDTO(_user));
+                .map(UserDTO::new);
 
 
     }
@@ -273,23 +275,40 @@ public class UserService {
     }
 
 
-    public User addImageToUser(User user, MultipartFile multipartFile) throws IOException {
-        if (multipartFile != null) {
-            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename()).toLowerCase().replaceAll(" ", "_");
+    public void addImageToUser(String username, MultipartFile multipartFile) throws IOException {
+        userRepo.findByUsername(username).ifPresent(user -> {
+            String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename())).toLowerCase().replaceAll(" ", "_");
             user.setImage(fileName);
             String uploadDir = "user-photos/" + user.getId();
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-            return user;
-        } else {
-            return user;
+            try {
+                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            userRepo.save(user);
 
-        }
+
+        });
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<UserDTO> getAllPublicUsers(Pageable pageable) {
+        return userRepo.findAllByIdNotNullAndActivatedIsTrue().map(UserDTO::new);
+
     }
 
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
-        return SecurityUtil.getCurrentUserLogin().flatMap(userRepo::findOneWithAuthoritiesByLogin);
+        return SecurityUtil.getCurrentUserLogin().flatMap(userRepo::findOneWithAuthoritiesByUsername);
+    }
+
+    public Optional<User> getUserWithAuthoritiesByUsername(String username) {
+        return userRepo.findOneWithAuthoritiesByUsername(username);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepo.findAll();
     }
 
 }

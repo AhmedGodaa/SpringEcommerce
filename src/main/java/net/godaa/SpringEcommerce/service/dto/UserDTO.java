@@ -6,11 +6,7 @@ import net.godaa.SpringEcommerce.domain.User;
 import net.godaa.SpringEcommerce.domain.enums.Gender;
 import net.godaa.SpringEcommerce.security.jwt.SecurityConstants;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.time.Instant;
+import javax.validation.constraints.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,6 +29,7 @@ public class UserDTO {
     private String lastName;
 
     @Email
+    @NotBlank
     @Size(min = 5, max = 254)
     private String email;
 
@@ -41,7 +38,9 @@ public class UserDTO {
 
     private boolean activated = false;
 
-
+    @NotNull
+    @Size(min = 60, max = 60)
+    private String password;
     private Set<String> authorities;
 
     private Gender gender;

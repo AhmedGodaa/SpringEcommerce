@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class FileUploadUtil {
+
     public static void saveFile(String uploadDir, String fileName,
                                 MultipartFile multipartFile) throws IOException {
         Path uploadPath = Paths.get(uploadDir);
@@ -27,8 +28,4 @@ public class FileUploadUtil {
         }
     }
 
-
-    public static void saveUserImage(User user, MultipartFile multipartFile) throws IOException {
-
-    }
 }
