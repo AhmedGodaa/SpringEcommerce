@@ -1,0 +1,51 @@
+name: Build and push Docker images
+
+on:
+  push:
+    branches:
+      - microservices
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker images
+        run: |
+
+          cd cart-service
+          ./gradlew build
+          docker build -t ahmedgodaa/cart-service:latest .
+          docker push ahmedgodaa/cart-service:latest
+          cd ../customer-service 
+          ./gradlew build  
+          docker build -t ahmedgodaa/customer-service:latest .
+          docker push ahmedgodaa/customer-service:latest
+          cd ../file-service
+          ./gradlew build     
+          docker build -t ahmedgodaa/file-service:latest .
+          docker push ahmedgodaa/file-service:latest
+          cd ../product-service
+          ./gradlew build          
+          docker build -t ahmedgodaa/product-service:latest .
+          docker push ahmedgodaa/product-service:latest
+          cd ../user-service 
+          ./gradlew build
+          docker build -t ahmedgodaa/user-service:latest .
+          docker push ahmedgodaa/user-service:latest
+
+

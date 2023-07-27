@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active:
+      - development
+
+#    trace , debug , info , warn , error
+logging:
+  file:
+    name: application.log
+  level:
+    root: info
