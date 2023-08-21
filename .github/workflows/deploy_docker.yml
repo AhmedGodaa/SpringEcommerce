@@ -1,9 +1,12 @@
 name: Build and push Docker images
 
-on:
-  push:
-    branches:
-      - master
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Bump Version
+        default: v1.0.0
+        required: true
 
 jobs:
   build-and-push:
@@ -26,26 +29,23 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-
           cd cart-service
           ./gradlew build
-          docker build -t ahmedgodaa/cart-service:latest .
-          docker push ahmedgodaa/cart-service:latest
+          docker build -t ahmedgodaa/cart-service:${{ github.event.inputs.version }} .
+          docker push ahmedgodaa/cart-service:${{ github.event.inputs.version }}
           cd ../customer-service 
           ./gradlew build  
-          docker build -t ahmedgodaa/customer-service:latest .
-          docker push ahmedgodaa/customer-service:latest
+          docker build -t ahmedgodaa/customer-service:${{ github.event.inputs.version }} .
+          docker push ahmedgodaa/customer-service:${{ github.event.inputs.version }}
           cd ../file-service
           ./gradlew build     
-          docker build -t ahmedgodaa/file-service:latest .
-          docker push ahmedgodaa/file-service:latest
+          docker build -t ahmedgodaa/file-service:${{ github.event.inputs.version }} .
+          docker push ahmedgodaa/file-service:${{ github.event.inputs.version }}
           cd ../product-service
           ./gradlew build          
-          docker build -t ahmedgodaa/product-service:latest .
-          docker push ahmedgodaa/product-service:latest
+          docker build -t ahmedgodaa/product-service:${{ github.event.inputs.version }} .
+          docker push ahmedgodaa/product-service:${{ github.event.inputs.version }}
           cd ../user-service 
           ./gradlew build
-          docker build -t ahmedgodaa/user-service:latest .
-          docker push ahmedgodaa/user-service:latest
-
-
+          docker build -t ahmedgodaa/user-service:${{ github.event.inputs.version }} .
+          docker push ahmedgodaa/user-service:${{ github.event.inputs.version }}
