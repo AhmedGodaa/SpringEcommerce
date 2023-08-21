@@ -30,22 +30,27 @@ jobs:
       - name: Build and push Docker images
         run: |
           cd cart-service
+          chmod +x gradlew
           ./gradlew build
           docker build -t ahmedgodaa/cart-service:${{ github.event.inputs.version }} .
           docker push ahmedgodaa/cart-service:${{ github.event.inputs.version }}
           cd ../customer-service 
+          chmod +x gradlew
           ./gradlew build  
           docker build -t ahmedgodaa/customer-service:${{ github.event.inputs.version }} .
           docker push ahmedgodaa/customer-service:${{ github.event.inputs.version }}
           cd ../file-service
+          chmod +x gradlew
           ./gradlew build     
           docker build -t ahmedgodaa/file-service:${{ github.event.inputs.version }} .
           docker push ahmedgodaa/file-service:${{ github.event.inputs.version }}
           cd ../product-service
+          chmod +x gradlew
           ./gradlew build          
           docker build -t ahmedgodaa/product-service:${{ github.event.inputs.version }} .
           docker push ahmedgodaa/product-service:${{ github.event.inputs.version }}
           cd ../user-service 
+          chmod +x gradlew
           ./gradlew build
           docker build -t ahmedgodaa/user-service:${{ github.event.inputs.version }} .
           docker push ahmedgodaa/user-service:${{ github.event.inputs.version }}
