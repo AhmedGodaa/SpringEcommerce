@@ -1,6 +1,7 @@
 # Microservices Ecommerce
 
-EcommerceApp Code [here](https://github.com/AhmedGodaa/SpringEcommerce/tree/master/monolithic), will be seprated into microservices
+EcommerceApp Monolithic Application Code [Click here](https://github.com/AhmedGodaa/SpringEcommerce/tree/master/monolithic), will be seprated into microservices.
+Services are empty not seperated yet. 
 
 Github Actions Workflow will build the services and push to dockerhub
 
